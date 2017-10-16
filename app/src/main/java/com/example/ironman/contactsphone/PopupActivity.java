@@ -88,6 +88,11 @@ public class PopupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup);
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
+        }
         mRelativeLayout = (RelativeLayout) findViewById(R.id.idRev);
         wv = (WebView) findViewById(R.id.webView);
         mdb = new MyDataBase(getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);

@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -48,7 +49,6 @@ public class ContactObserverService extends Service implements ContactObserver.O
     private Retrofit retrofit;
     private static UmoriliApi umoriliApi;
     private UtilsSharedPreferns utilsSharedPreferns;
-    PhoneCallStateListener phoneListener = null;
 
 
     public ContactObserverService() {
@@ -62,6 +62,7 @@ public class ContactObserverService extends Service implements ContactObserver.O
         contactObserver = new ContactObserver(this);
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         this.getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, false, contactObserver);
+
     }
 
     @Override
@@ -81,17 +82,6 @@ public class ContactObserverService extends Service implements ContactObserver.O
     }
 
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (phoneListener == null)
-        {
-            TelephonyManager tm = (TelephonyManager)getApplicationContext().getSystemService(TELEPHONY_SERVICE);
-            phoneListener = new PhoneCallStateListener(this);
-            tm.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
-        }
-
-        return START_STICKY;
-    }
 
     @Override
     public void onUpdate() {

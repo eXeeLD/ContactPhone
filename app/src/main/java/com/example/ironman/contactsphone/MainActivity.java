@@ -1,22 +1,18 @@
 package com.example.ironman.contactsphone;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.BlockedNumberContract;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int DATABASE_VERSION = 1;
     private Cursor c = null;
     int PERMISSION_REQUEST_CONTACT = 1;
+    public static final int READ_PHONE_STATE_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +43,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         askForContactPermission();
+        askForReadPhoneStatePermission();
     }
 
+    private void askForReadPhoneStatePermission() {
+
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSION);
+        }
+    }
     public void init() {
         listContacts = (RecyclerView) findViewById(R.id.my_recycler_view);
         Fresco.initialize(this);
